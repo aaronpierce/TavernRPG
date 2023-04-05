@@ -1,5 +1,4 @@
 import socket, threading, time
-from queue import Queue
 
 class Client:
     def __init__(self, host, port):
@@ -36,7 +35,7 @@ class Client:
             message = self.receive()
             if message:
                 print(message)
-            time.sleep(1)
+            time.sleep(.25)
     
     def input_processor(self):
         while self.connected:
@@ -57,3 +56,6 @@ class Client:
 
         except socket.timeout:
             self.connected = False
+
+if __name__ == '__main__':
+    Client('localhost', 9999)
