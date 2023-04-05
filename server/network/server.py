@@ -1,8 +1,7 @@
 import socket, threading
 from textwrap import dedent
-from .client import Client
-from .game import Game
-from .admin import Admin
+from network.connection import Connection
+from network.admin import Admin
 
 class Server:
     def __init__(self, host, port, game):
@@ -15,18 +14,20 @@ class Server:
         self.game = game
 
     def handle(self, conn, addr):
-        client = Client(conn, addr)
-        client.set_game_instance(Game(client))
+        client = Connection(conn, addr)
+        client.set_game_instance(self.game(client))
         self.connections.append(client)
         self.ack_connection(client)
-        while client.connected:
-            option = self.direct(client)
-            if option == "1":
-                client.game.start()
-            elif option == "3":
-                client.connected = False
-            elif option == "4":
-                Admin(self, client).start()
+        client.game.start()
+
+        # while client.connected:
+        #     option = self.direct(client)
+        #     if option == "1":
+        #         client.game.start()
+        #     elif option == "3":
+        #         client.connected = False
+        #     elif option == "4":
+        #         Admin(self, client).start()
 
     def listen(self):
         print('Server is listening...')
@@ -46,7 +47,7 @@ class Server:
 
     def display(self, client):
 
-        logo = \
+        logo = dedent(
             """
                                   .                                               
                               /   ))     |\         )               ).           
@@ -60,24 +61,23 @@ class Server:
             `-'           | |-------._------''_.-'----`-._``------_.-----'         
                         | |         ``----''            ``----''                  
                         | |                                                       
-                        c--'"""
+                        c--'""")
 
-        title = \
+        title = dedent(
             """
                     __ __|                             _ \  _ \  __| 
                        |   _` | \ \ /  -_)   _|  \       /  __/ (_ | 
                       _| \__,_|  \_/ \___| _| _| _|   _|_\ _|  \___| 
 
-            """
-        menu = \
+            """)
+        menu = dedent(
             """
             Select an option:
             1. - Start New Game
             2. - Load Game
             3. - Quit
-            4. - Admin Panel
             -------------------
-            """
+            """)
 
         #client.send(logo)
         client.send(title)
