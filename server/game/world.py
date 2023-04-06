@@ -21,7 +21,7 @@ class World():
         return tile_types[abbrv]
     
     def _map_dsl(self):
-        with open('server\\resources\\map.dsl.txt', 'r') as map:
+        with open('server/resources/map.dsl.txt', 'r') as map:
             dsl = ''.join(map.readlines())
         return dsl
     

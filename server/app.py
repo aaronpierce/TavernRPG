@@ -1,5 +1,4 @@
 from game import Game
 from network import Server
 
-Server('localhost', 9999, Game).listen()
-
+Server('157.245.248.126', 9999, Game).listen()

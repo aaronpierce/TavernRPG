@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  main:
+    build: .
+    image: tavern-rpg
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - "9999:9999"
