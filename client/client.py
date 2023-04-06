@@ -1,4 +1,4 @@
-import socket, threading, time
+import socket, threading, time, os
 
 class Client:
     def __init__(self, host, port):
@@ -35,7 +35,7 @@ class Client:
             message = self.receive()
             if message:
                 print(message)
-            time.sleep(.25)
+            time.sleep(.5)
     
     def input_processor(self):
         while self.connected:
@@ -58,4 +58,13 @@ class Client:
             self.connected = False
 
 if __name__ == '__main__':
-    Client('localhost', 9999)
+
+    host = 'localhost'
+
+    if os.name == 'posix':
+        if os.environ.get('IS_DOCKER', False):
+            host = '172.17.0.2'
+        else:
+            host = '157.245.248.126'
+
+    Client(host, 9999)
