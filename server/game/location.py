@@ -5,3 +5,6 @@ class Location():
 
     def __iter__(self):
         yield from [self.x, self.y]
+
+    def __str__(self):
+        return '({}, {})'.format(self.x, self.y)

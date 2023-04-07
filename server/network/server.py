@@ -1,7 +1,7 @@
 import socket, threading
 from textwrap import dedent
-from network.connection import Connection
-from network.admin import Admin
+from server.network.connection import Connection
+from server.network.admin import Admin
 
 class Server:
     def __init__(self, host, port, game):
@@ -18,16 +18,16 @@ class Server:
         client.set_game_instance(self.game(client))
         self.connections.append(client)
         self.ack_connection(client)
-        client.game.start()
+        #client.game.start()
 
-        # while client.connected:
-        #     option = self.direct(client)
-        #     if option == "1":
-        #         client.game.start()
-        #     elif option == "3":
-        #         client.connected = False
-        #     elif option == "4":
-        #         Admin(self, client).start()
+        while client.connected:
+            option = self.direct(client)
+            if option == "1":
+                client.game.start()
+            elif option == "3":
+                client.connected = False
+            elif option == "4":
+                Admin(self, client).start()
 
     def listen(self):
         print('Server is listening...')
@@ -38,8 +38,10 @@ class Server:
             t.start()
 
     def ack_connection(self, client):
-        client.send("\nYou've connected to the server!")
-        print(f"Client connected from {client.address}")
+        client.send("Connection to server established.")
+        client.send(f"$~IDSND~{client.id}")
+        
+        print(f"Client {client.id} has connected from {client.address}")
 
     def direct(self, client):
         self.display(client)
@@ -76,8 +78,7 @@ class Server:
             1. - Start New Game
             2. - Load Game
             3. - Quit
-            -------------------
-            """)
+            -------------------""")
 
         #client.send(logo)
         client.send(title)

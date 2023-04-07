@@ -6,54 +6,64 @@ class Client:
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
-        self.connected = True
+        self.connected = False
         self.send_thread = None
         self.receive_thread = None
         self.connect()
 
+
     def setup_tunnels(self):
+        self.connected = True
+
         self.send_thread = threading.Thread(target=self.input_processor)
         self.send_thread.daemon = False
         self.send_thread.start()
 
         self.receive_thread = threading.Thread(target=self.incoming_processor)
         self.receive_thread.daemon = False
-        self.receive_thread.start()
+        self.receive_thread.start()        
 
     def connect(self):
-        self.setup_tunnels()
-        
-    def shutdown(self):
+        try:
+            self.setup_tunnels()
+        except ConnectionRefusedError:
+            print('Server is offline.')
         sys.exit()
 
     def send(self, data):
         try:
             self.sock.send(data.encode())
-        except socket.error:
-            self.close()
+        except ConnectionResetError:
+            self.connected = False
+            #self.connection_lost('send')
 
     def receive(self):
         try:
             return self.sock.recv(1024).decode()
         except socket.error:
-            self.close()
+            self.connected = False
+            return None
         
 
     def close(self):
         if self.connected:
-            print('Disconnecting...')
+            print('\nDisconnecting...')
             self.connected = False
             self.sock.close()
-            self.shutdown()
+            
 
     def incoming_processor(self):
         while self.connected:
             message = self.receive()
             if message:
-                print(message)
+                if message.startswith('$'):
+                    self.command(message)
+                else:
+                    print(message)
             time.sleep(.5)
 
         print('Incoming Service offline.')
+        self.connection_lost('incoming')
     
     def input_processor(self):
         while self.connected:
@@ -65,14 +75,33 @@ class Client:
         value = None
         while not value:
             time.sleep(1)
-            value = input('>')
-            
+            try:
+                value = input('>')
+            except (EOFError, ConnectionResetError):
+                self.close()
+                value = '**!EOC!**'
 
         return value
 
     def outbound(self):
         message = self.prompt()
         self.send(message)
+
+    def command(self, message):
+        cmd = {'type': message.split('~')[1], 'data': message.split('~')[2]}
+        if cmd['type'] == 'IDSND':
+            print('Client ID: ', cmd['data'])
+
+    def connection_lost(self, where):
+        print(f'Connection Lost: Press <R> to Reconnect or <Q> to Quit. [{where}]')
+        
+        choice = input('> ')
+        if choice.lower() == 'r':
+            self.connect()
+        elif choice.lower() == 'q':
+            sys.exit()
+        else:
+            pass
 
 if __name__ == '__main__':
 

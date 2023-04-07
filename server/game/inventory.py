@@ -7,3 +7,4 @@ class Inventory:
     def display(self):
         self.game.outbound('\nInventory:')
         self.game.outbound('\n'.join([f'- {i}' for i in self.items]))
+        self.game.outbound('----------')

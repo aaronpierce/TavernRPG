@@ -1,1 +1,1 @@
-from network.server import Server
+from server.network.server import Server

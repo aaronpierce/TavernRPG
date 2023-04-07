@@ -6,7 +6,7 @@
         {
             "label": "run server",
             "type": "shell",
-            "command": "python server\\app.py",
+            "command": "python app.py",
             "problemMatcher": [],
             "group": {
                 "kind": "build",

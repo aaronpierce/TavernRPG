@@ -1,5 +1,5 @@
-from game.inventory import Inventory
-from game.items import Weapon
+from server.game.inventory import Inventory
+from server.game.items import Weapon
 
 import random
 
@@ -18,7 +18,7 @@ class Player():
         self.define()
 
     def define(self):
-        print(f'New Player {self.name} created.')
+        print(f'Client {self.game.client.id} has created a new Player <{self.name}>.')
 
     def attack(self):
         self.game.outbound(f'You attacked a Dragon for {self.strength * 4} Damage!')
@@ -29,9 +29,9 @@ class Player():
         elif direction == 'S':
             self.location.y += 1
         elif direction == 'E':
-            self.location.x -= 1
-        elif direction == 'W':
             self.location.x += 1
+        elif direction == 'W':
+            self.location.x -= 1
 
     def status(self):
             left, right, bottom = 9, 9, 24
@@ -44,9 +44,11 @@ class Player():
                 right += 0
                 bottom += 1
 
-            text = ['\n\n' + '_' * left + 'Status' + '_' * right,
+            text = ['\n' + '_' * bottom,
+                    ' ' * left + self.name + ' ' * right,
+                    '_' * bottom,
                     'Health: {}/100  Gold: {}'.format(self.health, self.gold), 
                     '¯' * bottom,
-                    '']
+                    '\n']
             
             self.game.outbound('\n'.join(text))

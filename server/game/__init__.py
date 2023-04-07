@@ -1,1 +1,1 @@
-from game.game import Game
+from server.game.game import Game

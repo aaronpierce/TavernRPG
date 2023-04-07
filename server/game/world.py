@@ -1,4 +1,4 @@
-from game.location import Location
+from server.game.location import Location
 from textwrap import dedent
 
 import random, os
@@ -56,11 +56,9 @@ class World():
         return _map
     
     def at(self, x, y):
-        print(x, y)
         if x < 0 or y < 0:
             return None
         try:
-            print(self.map[y][x])
             return self.map[y][x]
         except IndexError:
             return None
