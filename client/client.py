@@ -1,4 +1,4 @@
-import socket, threading, time, os
+import socket, threading, time, os, sys
 
 class Client:
     def __init__(self, host, port):
@@ -9,7 +9,7 @@ class Client:
         self.connected = True
         self.send_thread = None
         self.receive_thread = None
-        self.setup_tunnels()
+        self.connect()
 
     def setup_tunnels(self):
         self.send_thread = threading.Thread(target=self.input_processor)
@@ -20,15 +20,31 @@ class Client:
         self.receive_thread.daemon = False
         self.receive_thread.start()
 
+    def connect(self):
+        self.setup_tunnels()
+        
+    def shutdown(self):
+        sys.exit()
+
     def send(self, data):
-        self.sock.send(data.encode())
+        try:
+            self.sock.send(data.encode())
+        except socket.error:
+            self.close()
 
     def receive(self):
-        data = self.sock.recv(1024).decode()
-        return data
+        try:
+            return self.sock.recv(1024).decode()
+        except socket.error:
+            self.close()
+        
 
     def close(self):
-        self.sock.close()
+        if self.connected:
+            print('Disconnecting...')
+            self.connected = False
+            self.sock.close()
+            self.shutdown()
 
     def incoming_processor(self):
         while self.connected:
@@ -36,26 +52,27 @@ class Client:
             if message:
                 print(message)
             time.sleep(.5)
+
+        print('Incoming Service offline.')
     
     def input_processor(self):
         while self.connected:
             self.outbound()
-        self.close()
+        print('Outgoing Service offline.')
+        
 
     def prompt(self):
         value = None
         while not value:
-            value = input('')
+            time.sleep(1)
+            value = input('>')
+            
 
         return value
 
     def outbound(self):
-        try:
-            message = self.prompt()
-            self.send(message)
-
-        except socket.timeout:
-            self.connected = False
+        message = self.prompt()
+        self.send(message)
 
 if __name__ == '__main__':
 
