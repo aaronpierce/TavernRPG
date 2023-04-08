@@ -1,1 +1,1 @@
-from server.game.game import Game
+from TavernRPG.server.game.game import Game

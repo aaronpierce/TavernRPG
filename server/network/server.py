@@ -1,7 +1,7 @@
 import socket, threading
 from textwrap import dedent
-from server.network.connection import Connection
-from server.network.admin import Admin
+from TavernRPG.server.network.connection import Connection
+from TavernRPG.server.network.admin import Admin
 
 class Server:
     def __init__(self, host, port, game):

@@ -1,4 +1,4 @@
-from server.game.location import Location
+from TavernRPG.server.game.location import Location
 from textwrap import dedent
 
 import random, os

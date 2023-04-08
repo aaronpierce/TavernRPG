@@ -12,7 +12,7 @@ def resource_path(relative):
 
 
 def load(class_name):
-    with open(resource_path(f'server/resources/entities/{class_name}.json'), 'r') as f:
+    with open(resource_path(f'TavernRPG/server/resources/entities/{class_name}.json'), 'r') as f:
         data = json.load(f)
     return data
 
@@ -20,7 +20,7 @@ def load(class_name):
 # Used only as a utility to export a file to .json format to be used in game (func not used in game at all)
 def to_json_format(data):
     file_name = ''
-    with open(f'server/resources/entities/{file_name}.json', 'w+') as save_file:
+    with open(f'TavernRPG/server/resources/entities/{file_name}.json', 'w+') as save_file:
         json.dump(data, save_file, indent=4)
 
 

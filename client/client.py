@@ -35,7 +35,6 @@ class Client:
             self.sock.send(data.encode())
         except ConnectionResetError:
             self.connected = False
-            #self.connection_lost('send')
 
     def receive(self):
         try:
@@ -63,7 +62,6 @@ class Client:
             time.sleep(.5)
 
         print('Incoming Service offline.')
-        self.connection_lost('incoming')
     
     def input_processor(self):
         while self.connected:

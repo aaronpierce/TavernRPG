@@ -1,1 +1,1 @@
-from server.network.server import Server
+from TavernRPG.server.network.server import Server

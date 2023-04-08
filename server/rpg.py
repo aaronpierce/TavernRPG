@@ -1,5 +1,5 @@
-from server.game import Game
-from server.network import Server
+from TavernRPG.server.game import Game
+from TavernRPG.server.network import Server
 
 import os
 

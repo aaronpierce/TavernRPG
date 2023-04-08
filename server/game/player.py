@@ -1,5 +1,5 @@
-from server.game.inventory import Inventory
-from server.game.items import Weapon
+from TavernRPG.server.game.inventory import Inventory
+from TavernRPG.server.game.items import Weapon
 
 import random
 

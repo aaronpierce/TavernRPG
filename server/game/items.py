@@ -1,5 +1,5 @@
 import random
-from server.game.extras import load as _load
+from TavernRPG.server.game.extras import load as _load
 
 WEAPONS = _load('weapons')
 CONSUMABLES = _load('consumables')
